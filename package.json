@@ -2,8 +2,11 @@
   "name": "gha-installer",
   "version": "0.0.1",
   "description": "GitHub Actions Installer",
-  "main": "lib/main.js",
-  "files": ["lib/**/*"],
+  "main": "lib/index.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",
@@ -42,5 +45,15 @@
     "prettier": "^2.0.5",
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^4.0.0",
+    "@actions/tool-cache": "^1.6.0",
+    "@octokit/rest": "^18.0.3",
+    "@octokit/types": "^5.2.0",
+    "@octokit/webhooks": "^7.7.0",
+    "@types/semver": "^7.3.1",
+    "semver": "^7.3.2"
   }
 }
