@@ -1,4 +1,3 @@
-import {AppInfo, DownloadInfo} from './types'
 import {ActionsCore} from './adapters/core'
 import {Environment} from './adapters/environment'
 import {
@@ -7,6 +6,8 @@ import {
   ReposListReleasesResponseData
 } from './adapters/octokit'
 import * as semver from 'semver'
+import { AppInfo, describeApp } from './app_info'
+import { DownloadInfo } from './download_info'
 
 export class GitHubReleasesService {
   private _env: Environment
@@ -48,7 +49,7 @@ export class GitHubReleasesService {
   ): DownloadInfo {
     for (const candidate of release.assets) {
       if (candidate.name == assetName) {
-        this._core.debug(`Found executable ${assetName} for ${describe(app)}`)
+        this._core.debug(`Found executable ${assetName} for ${describeApp(app)}`)
         return {
           version: release.name,
           assetName: assetName,
@@ -58,7 +59,7 @@ export class GitHubReleasesService {
       }
     }
     throw new Error(
-      `Could not find executable ${assetName} for ${describe(app)}`
+      `Could not find executable ${assetName} for ${describeApp(app)}`
     )
   }
 
@@ -87,8 +88,4 @@ export class GitHubReleasesService {
         return 'linux-amd64'
     }
   }
-}
-
-function describe(app: AppInfo): string {
-  return `${app.name} ${app.version}`
 }

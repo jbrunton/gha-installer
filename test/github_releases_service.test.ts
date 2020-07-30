@@ -3,9 +3,9 @@ import { ActionsCore } from '../src/adapters/core'
 import { mock } from 'jest-mock-extended';
 import { ReposListReleasesItem } from '../src/adapters/octokit'
 import { TestOctokit, createTestOctokit } from './fixtures/test_octokit'
-import ReleasesService from '../src/releases_service';
+import {DownloadInfoService} from '../src/download_info';
 
-describe('ReleasesService', () => {
+describe('DownloadInfoService', () => {
 
   function createService(platform: string, octokit: TestOctokit = createTestOctokit()) {
     const env = { platform: platform }
@@ -42,7 +42,7 @@ describe('ReleasesService', () => {
   }
 
   describe('getDownloadInfoForAsset()', () => {
-    let service: ReleasesService
+    let service: DownloadInfoService
     let octokit: TestOctokit
 
     function stubListReleasesResponse(releases: Array<ReposListReleasesItem>) {

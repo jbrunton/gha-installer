@@ -1,9 +1,8 @@
-import AppInfo from './app_info'
-import DownloadInfo from './download_info'
+import {AppInfo} from './app_info'
 import {ActionsCore} from './adapters/core'
 import {ActionsToolCache} from './adapters/cache'
 import {FileSystem} from './adapters/fs'
-import ReleasesService from './releases_service'
+import {DownloadInfo, DownloadInfoService} from './download_info'
 import {Environment} from './adapters/environment'
 
 type OnFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => void
@@ -13,20 +12,20 @@ export class Installer {
   private _cache: ActionsToolCache
   private _fs: FileSystem
   private _env: Environment
-  private _releasesService: ReleasesService
+  private _releasesService: DownloadInfoService
 
   constructor(
     core: ActionsCore,
     cache: ActionsToolCache,
     fs: FileSystem,
     env: Environment,
-    releasesService: ReleasesService
+    downloadInfoService: DownloadInfoService
   ) {
     this._core = core
     this._cache = cache
     this._fs = fs
     this._env = env
-    this._releasesService = releasesService
+    this._releasesService = downloadInfoService
   }
 
   async installApp(app: AppInfo, onFileDownloaded?: OnFileDownloaded): Promise<void> {

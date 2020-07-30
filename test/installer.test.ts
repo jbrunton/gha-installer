@@ -3,8 +3,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { ActionsCore } from '../src/adapters/core'
 import { ActionsToolCache } from '../src/adapters/cache'
 import { FileSystem } from '../src/adapters/fs'
-import ReleasesService from '../src/releases_service'
-import { DownloadInfo } from '../src/types'
+import { DownloadInfoService, DownloadInfo } from '../src/download_info'
 
 describe('Installer', () => {
   const app = { name: "ytt", version: "0.28.0" }
@@ -38,8 +37,8 @@ describe('Installer', () => {
 
   function createInstaller(platform: "win32" | "linux"): Installer {
     const env = { platform: platform }
-    const releasesService = mock<ReleasesService>()
-    installer = new Installer(core, cache, fs, env, releasesService)
+    const downloadInfoService = mock<DownloadInfoService>()
+    installer = new Installer(core, cache, fs, env, downloadInfoService)
 
     const downloadInfo: DownloadInfo = {
       version: "0.28.0",
@@ -47,7 +46,7 @@ describe('Installer', () => {
       assetName: assetNames[platform],
       releaseNotes: "* some cool stuff"
     }
-    releasesService.getDownloadInfo
+    downloadInfoService.getDownloadInfo
       .calledWith(app)
       .mockReturnValue(Promise.resolve(downloadInfo))
     
