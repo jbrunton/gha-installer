@@ -74,7 +74,7 @@ describe('Installer', () => {
     await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith("Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-linux-amd64")
-    expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-linux-amd64"`)
+    //expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-linux-amd64"`)
     expect(fs.chmodSync).toHaveBeenCalledWith(downloadPaths.linux, "755")
     expect(core.addPath).toHaveBeenCalledWith(binPaths.linux)
   })
@@ -94,7 +94,7 @@ describe('Installer', () => {
     await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith("Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-windows-amd64.exe")
-    expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-windows-amd64.exe"`)
+    //expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-windows-amd64.exe"`)
     expect(fs.chmodSync).toHaveBeenCalledWith(downloadPaths.win32, "755")
     expect(core.addPath).toHaveBeenCalledWith(binPaths.win32)
   })
@@ -121,7 +121,7 @@ describe('Installer', () => {
     expect(core.addPath).toHaveBeenCalledWith(binPaths.win32)
   })
 
-  test('it verifies the checksums on nix systems', async () => {
+  test('it calls onFileDownloaded if given', async () => {
     const installer = createInstaller('linux')
     cache.downloadTool
       .calledWith(downloadUrls.linux)
@@ -133,25 +133,12 @@ describe('Installer', () => {
       .calledWith(downloadPaths.linux)
       .mockReturnValue(Buffer.from("unexpected content", "utf8"))
 
-    const result = installer.installApp(app)
+    const onFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => {
+      throw new Error(`Invalid checksum for ${info.assetName}`)
+    }
 
-    await expect(result).rejects.toThrowError('Unable to verify checksum for ytt-linux-amd64. Expected to find "70f71fa558520b944152eea2ec934c63374c630302a981eab010e0da97bc2f24  ./ytt-linux-amd64" in release notes.')
-  })
+    const result = installer.installApp(app, onFileDownloaded)
 
-  test('it verifies the checksums on windows', async () => {
-    const installer = createInstaller('win32')
-    cache.downloadTool
-      .calledWith(downloadUrls.win32)
-      .mockReturnValue(Promise.resolve(downloadPaths.win32))
-    cache.cacheFile
-      .calledWith(downloadPaths.win32, "ytt.exe", "ytt.exe", "0.28.0")
-      .mockReturnValue(Promise.resolve(binPaths.win32))
-    fs.readFileSync
-      .calledWith(downloadPaths.win32)
-      .mockReturnValue(Buffer.from("unexpected content", "utf8"))
-
-    const result = installer.installApp(app)
-
-    await expect(result).rejects.toThrowError('Unable to verify checksum for ytt-windows-amd64.exe. Expected to find "70f71fa558520b944152eea2ec934c63374c630302a981eab010e0da97bc2f24  ./ytt-windows-amd64.exe" in release notes.')
+    await expect(result).rejects.toThrowError('Invalid checksum for ytt-linux-amd64')
   })
 })
