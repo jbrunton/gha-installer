@@ -1,0 +1,24 @@
+{
+  "name": "gha-installer",
+  "version": "0.0.1",
+  "description": "GitHub Actions Installer",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jbrunton/gha-installer.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "Installer"
+  ],
+  "author": "John Brunton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbrunton/gha-installer/issues"
+  },
+  "homepage": "https://github.com/jbrunton/gha-installer#readme"
+}
