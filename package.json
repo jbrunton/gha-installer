@@ -2,9 +2,15 @@
   "name": "gha-installer",
   "version": "0.0.1",
   "description": "GitHub Actions Installer",
-  "main": "dist/index.js",
+  "main": "lib/main.js",
   "scripts": {
-    "test": "jest"
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "prepare": "npm run format && npm run build",
+    "test": "jest",
+    "all": "npm run build && npm run format && npm run lint && npm test"
   },
   "repository": {
     "type": "git",
@@ -20,5 +26,20 @@
   "bugs": {
     "url": "https://github.com/jbrunton/gha-installer/issues"
   },
-  "homepage": "https://github.com/jbrunton/gha-installer#readme"
+  "homepage": "https://github.com/jbrunton/gha-installer#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.3",
+    "@types/node": "^14.0.14",
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@typescript-eslint/parser": "^3.5.0",
+    "eslint": "^7.3.1",
+    "eslint-plugin-github": "^4.0.1",
+    "eslint-plugin-jest": "^23.17.1",
+    "jest": "^26.1.0",
+    "jest-circus": "^26.1.0",
+    "jest-mock-extended": "^1.0.9",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.1",
+    "typescript": "^3.9.5"
+  }
 }
