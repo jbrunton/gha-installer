@@ -1,8 +1,6 @@
 import { Installer } from '../src/installer'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { ActionsCore } from '../src/adapters/core'
-import { ActionsToolCache } from '../src/adapters/cache'
-import { FileSystem } from '../src/adapters/fs'
+import { ActionsCore, ActionsToolCache, FileSystem } from '../src/interfaces'
 import { DownloadInfoService, DownloadInfo } from '../src/download_info'
 
 describe('Installer', () => {

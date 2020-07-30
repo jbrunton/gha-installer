@@ -1,7 +1,7 @@
 import { GitHubReleasesService } from '../src/github_releases_service'
-import { ActionsCore } from '../src/adapters/core'
+import { ActionsCore } from '../src/interfaces'
 import { mock } from 'jest-mock-extended';
-import { ReposListReleasesItem } from '../src/adapters/octokit'
+import { ReposListReleasesItem } from '../src/octokit'
 import { TestOctokit, createTestOctokit } from './fixtures/test_octokit'
 import {DownloadInfoService} from '../src/download_info';
 

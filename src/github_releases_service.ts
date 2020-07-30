@@ -1,13 +1,13 @@
-import {ActionsCore} from './adapters/core'
-import {Environment} from './adapters/environment'
+import {ActionsCore, Environment} from './interfaces'
 import {
   Octokit,
   ReposListReleasesItem,
   ReposListReleasesResponseData
-} from './adapters/octokit'
+} from './octokit'
 import * as semver from 'semver'
 import { AppInfo, describeApp } from './app_info'
-import { DownloadInfo } from './download_info'
+import { DownloadInfo, DownloadInfoService } from './download_info'
+import * as core from '@actions/core'
 
 export class GitHubReleasesService {
   private _env: Environment
@@ -87,5 +87,9 @@ export class GitHubReleasesService {
       default:
         return 'linux-amd64'
     }
+  }
+
+  static create(octokit: Octokit): DownloadInfoService {
+    return new GitHubReleasesService(process, core, octokit)
   }
 }

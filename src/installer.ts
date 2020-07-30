@@ -1,9 +1,9 @@
 import {AppInfo} from './app_info'
-import {ActionsCore} from './adapters/core'
-import {ActionsToolCache} from './adapters/cache'
-import {FileSystem} from './adapters/fs'
+import {ActionsCore, ActionsToolCache, FileSystem, Environment} from './interfaces'
 import {DownloadInfo, DownloadInfoService} from './download_info'
-import {Environment} from './adapters/environment'
+import * as core from '@actions/core'
+import * as cache from '@actions/tool-cache'
+import * as fs from 'fs'
 
 type OnFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => void
 
@@ -67,5 +67,9 @@ export class Installer {
         apps.map((app: AppInfo) => `${app.name}:${app.version}`).join(', ')
     )
     await Promise.all(apps.map((app: AppInfo) => this.installApp(app)))
+  }
+
+  static create(downloadInfoService: DownloadInfoService): Installer {
+    return new Installer(core, cache, fs, process, downloadInfoService)
   }
 }
