@@ -3,13 +3,8 @@ import DownloadInfo from './download_info'
 import {ActionsCore} from './adapters/core'
 import {ActionsToolCache} from './adapters/cache'
 import {FileSystem} from './adapters/fs'
-import {ReleasesService} from './releases_service'
-import * as crypto from 'crypto'
+import ReleasesService from './releases_service'
 import {Environment} from './adapters/environment'
-
-function describe(app: AppInfo): string {
-  return `${app.name} ${app.version}`
-}
 
 type OnFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => void
 

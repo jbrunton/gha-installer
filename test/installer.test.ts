@@ -3,7 +3,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { ActionsCore } from '../src/adapters/core'
 import { ActionsToolCache } from '../src/adapters/cache'
 import { FileSystem } from '../src/adapters/fs'
-import { ReleasesService } from '../src/releases_service'
+import ReleasesService from '../src/releases_service'
 import { DownloadInfo } from '../src/types'
 
 describe('Installer', () => {

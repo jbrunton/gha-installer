@@ -1,15 +1,16 @@
-import { ReleasesService } from '../src/releases_service'
+import { GitHubReleasesService } from '../src/github_releases_service'
 import { ActionsCore } from '../src/adapters/core'
 import { mock } from 'jest-mock-extended';
 import { ReposListReleasesItem } from '../src/adapters/octokit'
 import { TestOctokit, createTestOctokit } from './fixtures/test_octokit'
+import ReleasesService from '../src/releases_service';
 
 describe('ReleasesService', () => {
 
   function createService(platform: string, octokit: TestOctokit = createTestOctokit()) {
     const env = { platform: platform }
     const core = mock<ActionsCore>()
-    return new ReleasesService(env, core, octokit)
+    return new GitHubReleasesService(env, core, octokit)
   }
 
   test('getAssetName()', () => {
