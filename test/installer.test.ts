@@ -24,11 +24,6 @@ describe('Installer', () => {
     linux: "/bin/ytt",
     win32: "/bin/ytt.exe"
   }
-  const expectedContent = "foo bar baz"
-  const expectedChecksums = {
-    linux: '"dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-linux-amd64"',
-    win32: '"dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-windows-amd64.exe"'
-  }
 
   let installer: Installer
   let core: MockProxy<ActionsCore>
@@ -50,7 +45,7 @@ describe('Installer', () => {
       version: "0.28.0",
       url: downloadUrls[platform],
       assetName: assetNames[platform],
-      releaseNotes: `* some cool stuff\n${expectedChecksums[platform]}`
+      releaseNotes: "* some cool stuff"
     }
     releasesService.getDownloadInfo
       .calledWith(app)
@@ -67,14 +62,10 @@ describe('Installer', () => {
     cache.cacheFile
       .calledWith(downloadPaths.linux, "ytt", "ytt", "0.28.0")
       .mockReturnValue(Promise.resolve(binPaths.linux))
-    fs.readFileSync
-      .calledWith(downloadPaths.linux)
-      .mockReturnValue(Buffer.from(expectedContent, "utf8"))
 
     await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith("Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-linux-amd64")
-    //expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-linux-amd64"`)
     expect(fs.chmodSync).toHaveBeenCalledWith(downloadPaths.linux, "755")
     expect(core.addPath).toHaveBeenCalledWith(binPaths.linux)
   })
@@ -87,14 +78,10 @@ describe('Installer', () => {
     cache.cacheFile
       .calledWith(downloadPaths.win32, "ytt.exe", "ytt.exe", "0.28.0")
       .mockReturnValue(Promise.resolve(binPaths.win32))
-    fs.readFileSync
-      .calledWith(downloadPaths.win32)
-      .mockReturnValue(Buffer.from(expectedContent, "utf8"))
-
+    
     await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith("Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-windows-amd64.exe")
-    //expect(core.info).toHaveBeenCalledWith(`✅  Verified checksum: "dbd318c1c462aee872f41109a4dfd3048871a03dedd0fe0e757ced57dad6f2d7  ./ytt-windows-amd64.exe"`)
     expect(fs.chmodSync).toHaveBeenCalledWith(downloadPaths.win32, "755")
     expect(core.addPath).toHaveBeenCalledWith(binPaths.win32)
   })
@@ -129,10 +116,7 @@ describe('Installer', () => {
     cache.cacheFile
       .calledWith(downloadPaths.linux, "ytt", "ytt", "0.28.0")
       .mockReturnValue(Promise.resolve(binPaths.linux))
-    fs.readFileSync
-      .calledWith(downloadPaths.linux)
-      .mockReturnValue(Buffer.from("unexpected content", "utf8"))
-
+    
     const onFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => {
       throw new Error(`Invalid checksum for ${info.assetName}`)
     }
