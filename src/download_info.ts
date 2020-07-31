@@ -12,6 +12,6 @@ export interface DownloadInfoService {
   getDownloadInfo(
     app: AppInfo,
     repo: ReposListReleasesParameters,
-    assetName: String
+    assetName: string
   ): Promise<DownloadInfo>
 }
