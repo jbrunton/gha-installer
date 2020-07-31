@@ -18,10 +18,10 @@ describe('DownloadInfoService', () => {
 
   function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
     return {
-      name: version,
+      tag_name: version,
       assets: [
         {
-          browser_download_url: `https://example.com/k14s/ytt/releases/download/v${version}/ytt-darwin-amd64`,
+          browser_download_url: `https://example.com/k14s/ytt/releases/download/${version}/ytt-darwin-amd64`,
           name: `${app}-linux-amd64`
         }
       ]
@@ -42,7 +42,7 @@ describe('DownloadInfoService', () => {
       service = createService('linux', octokit)
     })
 
-    test('it returns the asset for the specific version, if given', async () => {
+    test('it returns the asset for the specific version', async () => {
       stubListReleasesResponse([
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
@@ -58,7 +58,29 @@ describe('DownloadInfoService', () => {
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/v0.27.0/ytt-darwin-amd64',
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-darwin-amd64',
+        assetName: 'ytt-linux-amd64',
+        releaseNotes: undefined
+      })
+    })
+
+    test('it works with any valid semver format', async () => {
+      stubListReleasesResponse([
+        releaseJsonFor('ytt', '0.28.0'),
+        releaseJsonFor('ytt', '0.27.0')
+      ])
+      const downloadInfo = await service.getDownloadInfo(
+        {
+          name: 'ytt',
+          version: 'v0.27.0' // note the "v" prefix
+        },
+        repo,
+        'ytt-linux-amd64'
+      )
+      expect(downloadInfo).toEqual({
+        version: '0.27.0',
+        url:
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-darwin-amd64',
         assetName: 'ytt-linux-amd64',
         releaseNotes: undefined
       })
@@ -81,7 +103,7 @@ describe('DownloadInfoService', () => {
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/v0.28.0/ytt-darwin-amd64',
+          'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-darwin-amd64',
         assetName: 'ytt-linux-amd64',
         releaseNotes: undefined
       })
@@ -111,20 +133,20 @@ describe('DownloadInfoService', () => {
       const service = createService('linux', createTestOctokit())
       const releases = [
         releaseJsonFor('ytt', '0.1.2'),
-        releaseJsonFor('ytt', '0.28.0'),
-        releaseJsonFor('ytt', '0.2.0 - initial release'), // some apps have a "0.1.0 - initial release" version
+        releaseJsonFor('ytt', 'v0.28.0'),
+        releaseJsonFor('ytt', 'not-semver-tag'),
         releaseJsonFor('ytt', '0.27.0')
       ]
 
       const orderedResults = service['sortReleases'](releases).map(
-        result => result.name
+        result => result.tag_name
       )
 
       expect(orderedResults).toEqual([
-        '0.28.0',
+        'v0.28.0',
         '0.27.0',
         '0.1.2',
-        '0.2.0 - initial release'
+        'not-semver-tag'
       ])
     })
   })
