@@ -9,10 +9,11 @@ describe('GitHubReleasesService', () => {
   const repo = {owner: 'k14s', repo: 'ytt'}
 
   function createService(
+    platform: string,
     octokit: TestOctokit = createTestOctokit()
   ): GitHubReleasesService {
     const core = mock<ActionsCore>()
-    return new GitHubReleasesService(core, octokit, repo, 'ytt-linux-amd64')
+    return new GitHubReleasesService(core, { platform: platform }, octokit, repo, 'ytt-linux-amd64')
   }
 
   function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
@@ -37,7 +38,7 @@ describe('GitHubReleasesService', () => {
 
     beforeEach(() => {
       octokit = createTestOctokit()
-      service = createService(octokit)
+      service = createService('linux', octokit)
     })
 
     test('it returns the asset for the specific version', async () => {
@@ -109,7 +110,7 @@ describe('GitHubReleasesService', () => {
 
   describe('sortReleases()', () => {
     test('it sorts non-semver names last', () => {
-      const service = createService(createTestOctokit())
+      const service = createService('linux', createTestOctokit())
       const releases = [
         releaseJsonFor('ytt', '0.1.2'),
         releaseJsonFor('ytt', 'v0.28.0'),
