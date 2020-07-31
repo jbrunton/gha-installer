@@ -3,17 +3,16 @@ import {ActionsCore} from '../src/interfaces'
 import {mock} from 'jest-mock-extended'
 import {ReposListReleasesItem} from '../src/octokit'
 import {TestOctokit, createTestOctokit} from './fixtures/test_octokit'
-import {DownloadInfoService} from '../src/download_info'
+import {DownloadService} from '../src/download_service'
 
-describe('DownloadInfoService', () => {
+describe('GitHubReleasesService', () => {
   const repo = {owner: 'k14s', repo: 'ytt'}
 
   function createService(
-    platform: string,
     octokit: TestOctokit = createTestOctokit()
-  ) {
+  ): GitHubReleasesService {
     const core = mock<ActionsCore>()
-    return new GitHubReleasesService(core, octokit)
+    return new GitHubReleasesService(core, octokit, repo, 'ytt-linux-amd64')
   }
 
   function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
@@ -21,7 +20,7 @@ describe('DownloadInfoService', () => {
       tag_name: version,
       assets: [
         {
-          browser_download_url: `https://example.com/k14s/ytt/releases/download/${version}/ytt-darwin-amd64`,
+          browser_download_url: `https://example.com/k14s/ytt/releases/download/${version}/${app}-linux-amd64`,
           name: `${app}-linux-amd64`
         }
       ]
@@ -29,17 +28,16 @@ describe('DownloadInfoService', () => {
   }
 
   describe('getDownloadInfoForAsset()', () => {
-    let service: DownloadInfoService
+    let service: DownloadService
     let octokit: TestOctokit
 
     function stubListReleasesResponse(releases: Array<ReposListReleasesItem>) {
-      const params = {owner: 'k14s', repo: 'ytt'}
-      octokit.stubListReleasesResponse(params, releases)
+      octokit.stubListReleasesResponse(repo, releases)
     }
 
     beforeEach(() => {
       octokit = createTestOctokit()
-      service = createService('linux', octokit)
+      service = createService(octokit)
     })
 
     test('it returns the asset for the specific version', async () => {
@@ -47,21 +45,14 @@ describe('DownloadInfoService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const downloadInfo = await service.getDownloadInfo(
-        {
-          name: 'ytt',
-          version: '0.27.0'
-        },
-        repo,
-        'ytt-linux-amd64'
-      )
+      const downloadInfo = await service.getDownloadInfo({
+        name: 'ytt',
+        version: '0.27.0'
+      })
       expect(downloadInfo).toEqual({
         version: '0.27.0',
-        url:
-          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-darwin-amd64',
-        assetName: 'ytt-linux-amd64',
-        releaseNotes: undefined
-      })
+        url: 'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
+       })
     })
 
     test('it works with any valid semver format', async () => {
@@ -73,16 +64,12 @@ describe('DownloadInfoService', () => {
         {
           name: 'ytt',
           version: 'v0.27.0' // note the "v" prefix
-        },
-        repo,
-        'ytt-linux-amd64'
+        }
       )
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-darwin-amd64',
-        assetName: 'ytt-linux-amd64',
-        releaseNotes: undefined
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
       })
     })
 
@@ -96,16 +83,12 @@ describe('DownloadInfoService', () => {
         {
           name: 'ytt',
           version: 'latest'
-        },
-        repo,
-        'ytt-linux-amd64'
+        }
       )
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-darwin-amd64',
-        assetName: 'ytt-linux-amd64',
-        releaseNotes: undefined
+          'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-linux-amd64'
       })
     })
 
@@ -118,9 +101,7 @@ describe('DownloadInfoService', () => {
         {
           name: 'ytt',
           version: 'not-a-version'
-        },
-        repo,
-        'ytt-linux-amd64'
+        }
       )
       await expect(result).rejects.toThrowError(
         'Could not find version "not-a-version" for ytt'
@@ -130,7 +111,7 @@ describe('DownloadInfoService', () => {
 
   describe('sortReleases()', () => {
     test('it sorts non-semver names last', () => {
-      const service = createService('linux', createTestOctokit())
+      const service = createService(createTestOctokit())
       const releases = [
         releaseJsonFor('ytt', '0.1.2'),
         releaseJsonFor('ytt', 'v0.28.0'),
