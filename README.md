@@ -14,7 +14,7 @@ function createOctokit(): Octokit {
   return github.getOctokit(token);
 }
   
-async function run() {
+async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
     const releasesService = GitHubReleasesService.create(octokit)

@@ -73,7 +73,7 @@ export class Installer {
     this._core.addPath(binPath)
   }
 
-  async installAll(apps: Array<AppInfo>) {
+  async installAll(apps: Array<AppInfo>): Promise<void> {
     this._core.info(
       'Installing ' +
         apps.map((app: AppInfo) => `${app.name}:${app.version}`).join(', ')
