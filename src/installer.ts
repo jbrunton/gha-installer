@@ -5,7 +5,7 @@ import {
   FileSystem,
   Environment
 } from './interfaces'
-import {DownloadInfo, DownloadInfoService} from './download_info'
+import {DownloadInfo, DownloadService} from './download_service'
 import * as core from '@actions/core'
 import * as cache from '@actions/tool-cache'
 import * as fs from 'fs'
@@ -22,33 +22,24 @@ export class Installer {
   private _cache: ActionsToolCache
   private _fs: FileSystem
   private _env: Environment
-  private _releasesService: DownloadInfoService
+  private _downloadService: DownloadService
 
   constructor(
     core: ActionsCore,
     cache: ActionsToolCache,
     fs: FileSystem,
     env: Environment,
-    downloadInfoService: DownloadInfoService
+    downloadService: DownloadService
   ) {
     this._core = core
     this._cache = cache
     this._fs = fs
     this._env = env
-    this._releasesService = downloadInfoService
+    this._downloadService = downloadService
   }
 
-  async installApp(
-    app: AppInfo,
-    repo: ReposListReleasesParameters,
-    assetName: string,
-    onFileDownloaded?: OnFileDownloaded
-  ): Promise<void> {
-    const downloadInfo = await this._releasesService.getDownloadInfo(
-      app,
-      repo,
-      assetName
-    )
+  async installApp(app: AppInfo): Promise<void> {
+    const downloadInfo = await this._downloadService.getDownloadInfo(app)
 
     const binName = this._env.platform == 'win32' ? `${app.name}.exe` : app.name
 
@@ -62,7 +53,11 @@ export class Installer {
       )
       const downloadPath = await this._cache.downloadTool(downloadInfo.url)
 
-      onFileDownloaded?.(downloadPath, downloadInfo, this._core)
+      this._downloadService.onFileDownloaded?.(
+        downloadPath,
+        downloadInfo,
+        this._core
+      )
 
       this._fs.chmodSync(downloadPath, '755')
       binPath = await this._cache.cacheFile(
@@ -80,24 +75,15 @@ export class Installer {
     this._core.addPath(binPath)
   }
 
-  async installAll(
-    apps: Array<AppInfo>,
-    repo: ReposListReleasesParameters,
-    assetName: (app: AppInfo) => string,
-    onFileDownloaded?: OnFileDownloaded
-  ): Promise<void> {
+  async installAll(apps: Array<AppInfo>): Promise<void> {
     this._core.info(
       'Installing ' +
         apps.map((app: AppInfo) => `${app.name}:${app.version}`).join(', ')
     )
-    await Promise.all(
-      apps.map((app: AppInfo) =>
-        this.installApp(app, repo, assetName(app), onFileDownloaded)
-      )
-    )
+    await Promise.all(apps.map((app: AppInfo) => this.installApp(app)))
   }
 
-  static create(downloadInfoService: DownloadInfoService): Installer {
-    return new Installer(core, cache, fs, process, downloadInfoService)
+  static create(downloadService: DownloadService): Installer {
+    return new Installer(core, cache, fs, process, downloadService)
   }
 }

@@ -1,15 +1,15 @@
 import {Installer} from '../src/installer'
 import {mock, MockProxy} from 'jest-mock-extended'
 import {ActionsCore, ActionsToolCache, FileSystem} from '../src/interfaces'
-import {DownloadInfoService, DownloadInfo} from '../src/download_info'
+import {
+  DownloadService,
+  DownloadInfo,
+  OnFileDownloaded
+} from '../src/download_service'
+import * as path from 'path'
 
 describe('Installer', () => {
   const app = {name: 'ytt', version: '0.28.0'}
-  const repo = {owner: 'k14s', repo: 'ytt'}
-  const assetNames = {
-    linux: 'ytt-linux-amd64',
-    win32: 'ytt-windows-amd64.exe'
-  }
   const downloadUrls = {
     linux: 'example.com/ytt/0.28.0/ytt-linux-amd64',
     win32: 'example.com/ytt/0.28.0/ytt-windows-amd64.exe'
@@ -34,19 +34,22 @@ describe('Installer', () => {
     fs = mock<FileSystem>()
   })
 
-  function createInstaller(platform: 'win32' | 'linux'): Installer {
+  function createInstaller(
+    platform: 'win32' | 'linux',
+    onFileDownloaded?: OnFileDownloaded
+  ): Installer {
     const env = {platform: platform}
-    const downloadInfoService = mock<DownloadInfoService>()
-    installer = new Installer(core, cache, fs, env, downloadInfoService)
+    const downloadService = mock<DownloadService>({
+      onFileDownloaded: onFileDownloaded
+    })
+    installer = new Installer(core, cache, fs, env, downloadService)
 
     const downloadInfo: DownloadInfo = {
       version: '0.28.0',
-      url: downloadUrls[platform],
-      assetName: assetNames[platform],
-      releaseNotes: '* some cool stuff'
+      url: downloadUrls[platform]
     }
-    downloadInfoService.getDownloadInfo
-      .calledWith(app, repo, assetNames[platform])
+    downloadService.getDownloadInfo
+      .calledWith(app)
       .mockReturnValue(Promise.resolve(downloadInfo))
 
     return installer
@@ -61,7 +64,7 @@ describe('Installer', () => {
       .calledWith(downloadPaths.linux, 'ytt', 'ytt', '0.28.0')
       .mockReturnValue(Promise.resolve(binPaths.linux))
 
-    await installer.installApp(app, repo, assetNames.linux)
+    await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith(
       'Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-linux-amd64'
@@ -79,7 +82,7 @@ describe('Installer', () => {
       .calledWith(downloadPaths.win32, 'ytt.exe', 'ytt.exe', '0.28.0')
       .mockReturnValue(Promise.resolve(binPaths.win32))
 
-    await installer.installApp(app, repo, assetNames.win32)
+    await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith(
       'Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-windows-amd64.exe'
@@ -92,7 +95,7 @@ describe('Installer', () => {
     const installer = createInstaller('linux')
     cache.find.calledWith('ytt', '0.28.0').mockReturnValue(binPaths.linux)
 
-    await installer.installApp(app, repo, assetNames.linux)
+    await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith('ytt 0.28.0 already in tool cache')
     expect(cache.downloadTool).not.toHaveBeenCalled()
@@ -103,15 +106,22 @@ describe('Installer', () => {
     const installer = createInstaller('win32')
     cache.find.calledWith('ytt.exe', '0.28.0').mockReturnValue(binPaths.win32)
 
-    await installer.installApp(app, repo, assetNames.win32)
+    await installer.installApp(app)
 
     expect(core.info).toHaveBeenCalledWith('ytt 0.28.0 already in tool cache')
     expect(cache.downloadTool).not.toHaveBeenCalled()
     expect(core.addPath).toHaveBeenCalledWith(binPaths.win32)
   })
 
-  test('it calls onFileDownloaded if given', async () => {
-    const installer = createInstaller('linux')
+  test('it calls onFileDownloaded, if given', async () => {
+    const onFileDownloaded = (
+      file: string,
+      info: DownloadInfo,
+      core: ActionsCore
+    ) => {
+      throw new Error(`Invalid checksum for ${path.basename(file)}`)
+    }
+    const installer = createInstaller('linux', onFileDownloaded)
     cache.downloadTool
       .calledWith(downloadUrls.linux)
       .mockReturnValue(Promise.resolve(downloadPaths.linux))
@@ -119,20 +129,7 @@ describe('Installer', () => {
       .calledWith(downloadPaths.linux, 'ytt', 'ytt', '0.28.0')
       .mockReturnValue(Promise.resolve(binPaths.linux))
 
-    const onFileDownloaded = (
-      path: string,
-      info: DownloadInfo,
-      core: ActionsCore
-    ) => {
-      throw new Error(`Invalid checksum for ${info.assetName}`)
-    }
-
-    const result = installer.installApp(
-      app,
-      repo,
-      assetNames.linux,
-      onFileDownloaded
-    )
+    const result = installer.installApp(app)
 
     await expect(result).rejects.toThrowError(
       'Invalid checksum for ytt-linux-amd64'
