@@ -1,5 +1,5 @@
 {
-  "name": "gha-installer",
+  "name": "@jbrunton/gha-installer",
   "version": "0.0.1",
   "description": "GitHub Actions Installer",
   "main": "lib/index.js",

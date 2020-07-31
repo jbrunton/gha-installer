@@ -5,7 +5,7 @@ Utility classes for creating GitHub actions for downloading and caching binary f
 ## Usage
 
 ```typescript
-import {Installer, GitHubReleasesService, Octokit} from 'gha-installer'
+import {Installer, GitHubReleasesService, Octokit} from '@jbrunton/gha-installer'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
