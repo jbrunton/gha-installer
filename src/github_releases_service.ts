@@ -2,7 +2,8 @@ import {ActionsCore, Environment} from './interfaces'
 import {
   Octokit,
   ReposListReleasesItem,
-  ReposListReleasesResponseData
+  ReposListReleasesResponseData,
+  ReposListReleasesParameters
 } from './octokit'
 import * as semver from 'semver'
 import {AppInfo, describeApp} from './app_info'
@@ -10,20 +11,15 @@ import {DownloadInfo, DownloadInfoService} from './download_info'
 import * as core from '@actions/core'
 
 export class GitHubReleasesService {
-  private _env: Environment
   private _core: ActionsCore
   private _octokit: Octokit
 
-  constructor(env: Environment, core: ActionsCore, octokit: Octokit) {
-    this._env = env
+  constructor(core: ActionsCore, octokit: Octokit) {
     this._core = core
     this._octokit = octokit
   }
 
-  async getDownloadInfo(app: AppInfo): Promise<DownloadInfo> {
-    const assetName = this.getAssetName(app.name)
-    const repo = {owner: 'k14s', repo: app.name}
-
+  async getDownloadInfo(app: AppInfo, repo: ReposListReleasesParameters, assetName: string): Promise<DownloadInfo> {
     const response = await this._octokit.repos.listReleases(repo)
     const releases: ReposListReleasesResponseData = response.data
 
@@ -76,22 +72,7 @@ export class GitHubReleasesService {
     })
   }
 
-  private getAssetName(appName: string): string {
-    return `${appName}-${this.getAssetSuffix()}`
-  }
-
-  private getAssetSuffix(): string {
-    switch (this._env.platform) {
-      case 'win32':
-        return 'windows-amd64.exe'
-      case 'darwin':
-        return 'darwin-amd64'
-      default:
-        return 'linux-amd64'
-    }
-  }
-
   static create(octokit: Octokit): DownloadInfoService {
-    return new GitHubReleasesService(process, core, octokit)
+    return new GitHubReleasesService(core, octokit)
   }
 }

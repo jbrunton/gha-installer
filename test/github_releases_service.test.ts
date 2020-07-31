@@ -6,32 +6,15 @@ import {TestOctokit, createTestOctokit} from './fixtures/test_octokit'
 import {DownloadInfoService} from '../src/download_info'
 
 describe('DownloadInfoService', () => {
+  const repo = { owner: 'k14s', repo: 'ytt' }
+
   function createService(
     platform: string,
     octokit: TestOctokit = createTestOctokit()
   ) {
-    const env = {platform: platform}
     const core = mock<ActionsCore>()
-    return new GitHubReleasesService(env, core, octokit)
+    return new GitHubReleasesService(core, octokit)
   }
-
-  test('getAssetName()', () => {
-    {
-      const service = createService('linux')
-      const assetName = service['getAssetName']('ytt')
-      expect(assetName).toEqual('ytt-linux-amd64')
-    }
-    {
-      const service = createService('win32')
-      const assetName = service['getAssetName']('kbld')
-      expect(assetName).toEqual('kbld-windows-amd64.exe')
-    }
-    {
-      const service = createService('darwin')
-      const assetName = service['getAssetName']('kapp')
-      expect(assetName).toEqual('kapp-darwin-amd64')
-    }
-  })
 
   function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
     return {
@@ -67,7 +50,7 @@ describe('DownloadInfoService', () => {
       const downloadInfo = await service.getDownloadInfo({
         name: 'ytt',
         version: '0.27.0'
-      })
+      }, repo, 'ytt-linux-amd64')
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
@@ -86,7 +69,7 @@ describe('DownloadInfoService', () => {
       const downloadInfo = await service.getDownloadInfo({
         name: 'ytt',
         version: 'latest'
-      })
+      }, repo, 'ytt-linux-amd64')
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
@@ -104,7 +87,7 @@ describe('DownloadInfoService', () => {
       const result = service.getDownloadInfo({
         name: 'ytt',
         version: 'not-a-version'
-      })
+      }, repo, 'ytt-linux-amd64')
       await expect(result).rejects.toThrowError(
         'Could not find version "not-a-version" for ytt'
       )

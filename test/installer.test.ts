@@ -5,6 +5,7 @@ import {DownloadInfoService, DownloadInfo} from '../src/download_info'
 
 describe('Installer', () => {
   const app = {name: 'ytt', version: '0.28.0'}
+  const repo = {owner: 'k14s', repo: 'ytt'}
   const assetNames = {
     linux: 'ytt-linux-amd64',
     win32: 'ytt-windows-amd64.exe'
@@ -45,7 +46,7 @@ describe('Installer', () => {
       releaseNotes: '* some cool stuff'
     }
     downloadInfoService.getDownloadInfo
-      .calledWith(app)
+      .calledWith(app, repo, assetNames[platform])
       .mockReturnValue(Promise.resolve(downloadInfo))
 
     return installer
@@ -60,7 +61,7 @@ describe('Installer', () => {
       .calledWith(downloadPaths.linux, 'ytt', 'ytt', '0.28.0')
       .mockReturnValue(Promise.resolve(binPaths.linux))
 
-    await installer.installApp(app)
+    await installer.installApp(app, repo, assetNames.linux)
 
     expect(core.info).toHaveBeenCalledWith(
       'Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-linux-amd64'
@@ -78,7 +79,7 @@ describe('Installer', () => {
       .calledWith(downloadPaths.win32, 'ytt.exe', 'ytt.exe', '0.28.0')
       .mockReturnValue(Promise.resolve(binPaths.win32))
 
-    await installer.installApp(app)
+    await installer.installApp(app, repo, assetNames.win32)
 
     expect(core.info).toHaveBeenCalledWith(
       'Downloading ytt 0.28.0 from example.com/ytt/0.28.0/ytt-windows-amd64.exe'
@@ -91,7 +92,7 @@ describe('Installer', () => {
     const installer = createInstaller('linux')
     cache.find.calledWith('ytt', '0.28.0').mockReturnValue(binPaths.linux)
 
-    await installer.installApp(app)
+    await installer.installApp(app, repo, assetNames.linux)
 
     expect(core.info).toHaveBeenCalledWith('ytt 0.28.0 already in tool cache')
     expect(cache.downloadTool).not.toHaveBeenCalled()
@@ -102,7 +103,7 @@ describe('Installer', () => {
     const installer = createInstaller('win32')
     cache.find.calledWith('ytt.exe', '0.28.0').mockReturnValue(binPaths.win32)
 
-    await installer.installApp(app)
+    await installer.installApp(app, repo, assetNames.win32)
 
     expect(core.info).toHaveBeenCalledWith('ytt 0.28.0 already in tool cache')
     expect(cache.downloadTool).not.toHaveBeenCalled()
@@ -126,7 +127,7 @@ describe('Installer', () => {
       throw new Error(`Invalid checksum for ${info.assetName}`)
     }
 
-    const result = installer.installApp(app, onFileDownloaded)
+    const result = installer.installApp(app, repo, assetNames.linux, onFileDownloaded)
 
     await expect(result).rejects.toThrowError(
       'Invalid checksum for ytt-linux-amd64'
