@@ -127,7 +127,12 @@ describe('Installer', () => {
       throw new Error(`Invalid checksum for ${info.assetName}`)
     }
 
-    const result = installer.installApp(app, repo, assetNames.linux, onFileDownloaded)
+    const result = installer.installApp(
+      app,
+      repo,
+      assetNames.linux,
+      onFileDownloaded
+    )
 
     await expect(result).rejects.toThrowError(
       'Invalid checksum for ytt-linux-amd64'

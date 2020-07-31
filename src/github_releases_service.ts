@@ -19,7 +19,11 @@ export class GitHubReleasesService {
     this._octokit = octokit
   }
 
-  async getDownloadInfo(app: AppInfo, repo: ReposListReleasesParameters, assetName: string): Promise<DownloadInfo> {
+  async getDownloadInfo(
+    app: AppInfo,
+    repo: ReposListReleasesParameters,
+    assetName: string
+  ): Promise<DownloadInfo> {
     const response = await this._octokit.repos.listReleases(repo)
     const releases: ReposListReleasesResponseData = response.data
 

@@ -9,7 +9,7 @@ import {DownloadInfo, DownloadInfoService} from './download_info'
 import * as core from '@actions/core'
 import * as cache from '@actions/tool-cache'
 import * as fs from 'fs'
-import { ReposListReleasesParameters } from './octokit'
+import {ReposListReleasesParameters} from './octokit'
 
 type OnFileDownloaded = (
   path: string,
@@ -44,7 +44,11 @@ export class Installer {
     assetName: string,
     onFileDownloaded?: OnFileDownloaded
   ): Promise<void> {
-    const downloadInfo = await this._releasesService.getDownloadInfo(app, repo, assetName)
+    const downloadInfo = await this._releasesService.getDownloadInfo(
+      app,
+      repo,
+      assetName
+    )
 
     const binName = this._env.platform == 'win32' ? `${app.name}.exe` : app.name
 
@@ -86,7 +90,11 @@ export class Installer {
       'Installing ' +
         apps.map((app: AppInfo) => `${app.name}:${app.version}`).join(', ')
     )
-    await Promise.all(apps.map((app: AppInfo) => this.installApp(app, repo, assetName(app), onFileDownloaded)))
+    await Promise.all(
+      apps.map((app: AppInfo) =>
+        this.installApp(app, repo, assetName(app), onFileDownloaded)
+      )
+    )
   }
 
   static create(downloadInfoService: DownloadInfoService): Installer {

@@ -1,5 +1,5 @@
 import {AppInfo} from './app_info'
-import { ReposListReleasesParameters } from './octokit';
+import {ReposListReleasesParameters} from './octokit'
 
 export interface DownloadInfo {
   version: string
@@ -9,5 +9,9 @@ export interface DownloadInfo {
 }
 
 export interface DownloadInfoService {
-  getDownloadInfo(app: AppInfo, repo: ReposListReleasesParameters, assetName: String): Promise<DownloadInfo>
+  getDownloadInfo(
+    app: AppInfo,
+    repo: ReposListReleasesParameters,
+    assetName: String
+  ): Promise<DownloadInfo>
 }

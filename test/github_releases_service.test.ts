@@ -6,7 +6,7 @@ import {TestOctokit, createTestOctokit} from './fixtures/test_octokit'
 import {DownloadInfoService} from '../src/download_info'
 
 describe('DownloadInfoService', () => {
-  const repo = { owner: 'k14s', repo: 'ytt' }
+  const repo = {owner: 'k14s', repo: 'ytt'}
 
   function createService(
     platform: string,
@@ -47,10 +47,14 @@ describe('DownloadInfoService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const downloadInfo = await service.getDownloadInfo({
-        name: 'ytt',
-        version: '0.27.0'
-      }, repo, 'ytt-linux-amd64')
+      const downloadInfo = await service.getDownloadInfo(
+        {
+          name: 'ytt',
+          version: '0.27.0'
+        },
+        repo,
+        'ytt-linux-amd64'
+      )
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
@@ -66,10 +70,14 @@ describe('DownloadInfoService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const downloadInfo = await service.getDownloadInfo({
-        name: 'ytt',
-        version: 'latest'
-      }, repo, 'ytt-linux-amd64')
+      const downloadInfo = await service.getDownloadInfo(
+        {
+          name: 'ytt',
+          version: 'latest'
+        },
+        repo,
+        'ytt-linux-amd64'
+      )
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
@@ -84,10 +92,14 @@ describe('DownloadInfoService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const result = service.getDownloadInfo({
-        name: 'ytt',
-        version: 'not-a-version'
-      }, repo, 'ytt-linux-amd64')
+      const result = service.getDownloadInfo(
+        {
+          name: 'ytt',
+          version: 'not-a-version'
+        },
+        repo,
+        'ytt-linux-amd64'
+      )
       await expect(result).rejects.toThrowError(
         'Could not find version "not-a-version" for ytt'
       )
