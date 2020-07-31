@@ -51,8 +51,9 @@ describe('GitHubReleasesService', () => {
       })
       expect(downloadInfo).toEqual({
         version: '0.27.0',
-        url: 'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
-       })
+        url:
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
+      })
     })
 
     test('it works with any valid semver format', async () => {
@@ -60,12 +61,10 @@ describe('GitHubReleasesService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const downloadInfo = await service.getDownloadInfo(
-        {
-          name: 'ytt',
-          version: 'v0.27.0' // note the "v" prefix
-        }
-      )
+      const downloadInfo = await service.getDownloadInfo({
+        name: 'ytt',
+        version: 'v0.27.0' // note the "v" prefix
+      })
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
@@ -79,12 +78,10 @@ describe('GitHubReleasesService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const downloadInfo = await service.getDownloadInfo(
-        {
-          name: 'ytt',
-          version: 'latest'
-        }
-      )
+      const downloadInfo = await service.getDownloadInfo({
+        name: 'ytt',
+        version: 'latest'
+      })
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
@@ -97,12 +94,10 @@ describe('GitHubReleasesService', () => {
         releaseJsonFor('ytt', '0.28.0'),
         releaseJsonFor('ytt', '0.27.0')
       ])
-      const result = service.getDownloadInfo(
-        {
-          name: 'ytt',
-          version: 'not-a-version'
-        }
-      )
+      const result = service.getDownloadInfo({
+        name: 'ytt',
+        version: 'not-a-version'
+      })
       await expect(result).rejects.toThrowError(
         'Could not find version "not-a-version" for ytt'
       )

@@ -53,7 +53,11 @@ export class Installer {
       )
       const downloadPath = await this._cache.downloadTool(downloadInfo.url)
 
-      this._downloadService.onFileDownloaded?.(downloadPath, downloadInfo, this._core)
+      this._downloadService.onFileDownloaded?.(
+        downloadPath,
+        downloadInfo,
+        this._core
+      )
 
       this._fs.chmodSync(downloadPath, '755')
       binPath = await this._cache.cacheFile(

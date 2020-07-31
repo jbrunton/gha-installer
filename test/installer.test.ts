@@ -1,7 +1,11 @@
 import {Installer} from '../src/installer'
 import {mock, MockProxy} from 'jest-mock-extended'
 import {ActionsCore, ActionsToolCache, FileSystem} from '../src/interfaces'
-import {DownloadService, DownloadInfo, OnFileDownloaded} from '../src/download_service'
+import {
+  DownloadService,
+  DownloadInfo,
+  OnFileDownloaded
+} from '../src/download_service'
 import * as path from 'path'
 
 describe('Installer', () => {
@@ -30,7 +34,10 @@ describe('Installer', () => {
     fs = mock<FileSystem>()
   })
 
-  function createInstaller(platform: 'win32' | 'linux', onFileDownloaded?: OnFileDownloaded): Installer {
+  function createInstaller(
+    platform: 'win32' | 'linux',
+    onFileDownloaded?: OnFileDownloaded
+  ): Installer {
     const env = {platform: platform}
     const downloadService = mock<DownloadService>({
       onFileDownloaded: onFileDownloaded
@@ -107,7 +114,11 @@ describe('Installer', () => {
   })
 
   test('it calls onFileDownloaded, if given', async () => {
-    const onFileDownloaded = (file: string, info: DownloadInfo, core: ActionsCore) => {
+    const onFileDownloaded = (
+      file: string,
+      info: DownloadInfo,
+      core: ActionsCore
+    ) => {
       throw new Error(`Invalid checksum for ${path.basename(file)}`)
     }
     const installer = createInstaller('linux', onFileDownloaded)
