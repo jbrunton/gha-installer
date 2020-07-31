@@ -52,7 +52,8 @@ describe('GitHubReleasesService', () => {
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64',
+        release: releaseJsonFor('ytt', '0.27.0')
       })
     })
 
@@ -68,7 +69,8 @@ describe('GitHubReleasesService', () => {
       expect(downloadInfo).toEqual({
         version: '0.27.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64'
+          'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64',
+        release: releaseJsonFor('ytt', '0.27.0')
       })
     })
 
@@ -85,7 +87,8 @@ describe('GitHubReleasesService', () => {
       expect(downloadInfo).toEqual({
         version: '0.28.0',
         url:
-          'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-linux-amd64'
+          'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-linux-amd64',
+        release: releaseJsonFor('ytt', '0.28.0')
       })
     })
 
