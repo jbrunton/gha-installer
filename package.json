@@ -12,9 +12,11 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "prepare": "npm run format && npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run format && node ./scripts/check_clean_repo && npm run lint && npm test",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm test",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -43,6 +45,7 @@
     "jest-circus": "^26.1.0",
     "jest-mock-extended": "^1.0.9",
     "prettier": "^2.0.5",
+    "shelljs": "^0.8.4",
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.5"
   },
