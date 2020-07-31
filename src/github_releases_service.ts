@@ -25,7 +25,7 @@ export class GitHubReleasesService {
     assetName: string
   ): Promise<DownloadInfo> {
     const response = await this._octokit.repos.listReleases(repo)
-    const releases: ReposListReleasesResponseData = response.data    
+    const releases: ReposListReleasesResponseData = response.data
 
     if (app.version == 'latest') {
       const release = this.sortReleases(releases)[0]
