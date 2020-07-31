@@ -5,9 +5,9 @@ import {
   ReposListReleasesResponseData,
   ReposListReleasesParameters
 } from './octokit'
-import * as semver from 'semver'
 import {AppInfo, describeApp} from './app_info'
 import {DownloadInfo, DownloadService} from './download_service'
+import * as semver from 'semver'
 import * as core from '@actions/core'
 
 interface GitHubReleaseInfo {
@@ -17,23 +17,26 @@ interface GitHubReleaseInfo {
 export type GitHubDownloadInfo = DownloadInfo & GitHubReleaseInfo
 
 export type RepoFunction = (app: AppInfo) => ReposListReleasesParameters
-export type AssetNameFunction = (app: AppInfo) => string
+export type AssetNameFunction = (platform: string, app: AppInfo) => string
 export type RepoDefinition = ReposListReleasesParameters | RepoFunction
 export type AssetNameDefinition = string | AssetNameFunction
 
 export class GitHubReleasesService {
   private _core: ActionsCore
+  private _env: Environment
   private _octokit: Octokit
   private _repo: RepoDefinition
   private _assetName: AssetNameDefinition
 
   constructor(
     core: ActionsCore,
+    env: Environment,
     octokit: Octokit,
     repo: RepoDefinition,
     assetName: AssetNameDefinition
   ) {
     this._core = core
+    this._env = env
     this._octokit = octokit
     this._repo = repo
     this._assetName = assetName
@@ -44,7 +47,7 @@ export class GitHubReleasesService {
     const assetName =
       typeof this._assetName == 'string'
         ? this._assetName
-        : this._assetName(app)
+        : this._assetName(this._env.platform, app)
     const response = await this._octokit.repos.listReleases(repo)
     const releases: ReposListReleasesResponseData = response.data
 
@@ -112,6 +115,6 @@ export class GitHubReleasesService {
     repo: RepoDefinition,
     assetName: AssetNameDefinition
   ): DownloadService {
-    return new GitHubReleasesService(core, octokit, repo, assetName)
+    return new GitHubReleasesService(core, process, octokit, repo, assetName)
   }
 }
