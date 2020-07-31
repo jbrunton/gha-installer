@@ -19,7 +19,10 @@ async function run(): Promise<void> {
     const octokit = createOctokit()
     const releasesService = GitHubReleasesService.create(octokit)
     const installer = Installer.create(releasesService)
-    return await installer.installApp({ name: 'ytt', version: '0.28.0' })
+
+    const repo = { owner: 'k14s', repo: 'ytt' }
+    const app = { name: 'ytt', version: '0.28.0' }
+    return await installer.installApp(app, repo, 'ytt-linux-amd64')
   } catch (error) {
     core.setFailed(error.message)
   }
