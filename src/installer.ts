@@ -1,11 +1,20 @@
 import {AppInfo} from './app_info'
-import {ActionsCore, ActionsToolCache, FileSystem, Environment} from './interfaces'
+import {
+  ActionsCore,
+  ActionsToolCache,
+  FileSystem,
+  Environment
+} from './interfaces'
 import {DownloadInfo, DownloadInfoService} from './download_info'
 import * as core from '@actions/core'
 import * as cache from '@actions/tool-cache'
 import * as fs from 'fs'
 
-type OnFileDownloaded = (path: string, info: DownloadInfo, core: ActionsCore) => void
+type OnFileDownloaded = (
+  path: string,
+  info: DownloadInfo,
+  core: ActionsCore
+) => void
 
 export class Installer {
   private _core: ActionsCore
@@ -28,7 +37,10 @@ export class Installer {
     this._releasesService = downloadInfoService
   }
 
-  async installApp(app: AppInfo, onFileDownloaded?: OnFileDownloaded): Promise<void> {
+  async installApp(
+    app: AppInfo,
+    onFileDownloaded?: OnFileDownloaded
+  ): Promise<void> {
     const downloadInfo = await this._releasesService.getDownloadInfo(app)
 
     const binName = this._env.platform == 'win32' ? `${app.name}.exe` : app.name

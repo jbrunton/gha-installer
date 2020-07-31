@@ -5,8 +5,8 @@ import {
   ReposListReleasesResponseData
 } from './octokit'
 import * as semver from 'semver'
-import { AppInfo, describeApp } from './app_info'
-import { DownloadInfo, DownloadInfoService } from './download_info'
+import {AppInfo, describeApp} from './app_info'
+import {DownloadInfo, DownloadInfoService} from './download_info'
 import * as core from '@actions/core'
 
 export class GitHubReleasesService {
@@ -49,7 +49,9 @@ export class GitHubReleasesService {
   ): DownloadInfo {
     for (const candidate of release.assets) {
       if (candidate.name == assetName) {
-        this._core.debug(`Found executable ${assetName} for ${describeApp(app)}`)
+        this._core.debug(
+          `Found executable ${assetName} for ${describeApp(app)}`
+        )
         return {
           version: release.name,
           assetName: assetName,

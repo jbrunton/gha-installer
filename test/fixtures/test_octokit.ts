@@ -5,7 +5,7 @@ import {
   ReposListReleasesItem,
   ReposListReleasesParameters,
   ReposListReleasesResponseData
-} from '../../src/adapters/octokit';
+} from '../../src/octokit';
 import { MockProxy, mockDeep } from 'jest-mock-extended';
 import { isEqual } from './matchers'
 
