@@ -3,7 +3,6 @@ import {ActionsCore} from '../src/interfaces'
 import {mock} from 'jest-mock-extended'
 import {ReposListReleasesItem} from '../src/octokit'
 import {TestOctokit, createTestOctokit} from './fixtures/test_octokit'
-import {DownloadService} from '../src/download_service'
 
 describe('GitHubReleasesService', () => {
   const repo = {owner: 'k14s', repo: 'ytt'}
@@ -35,7 +34,7 @@ describe('GitHubReleasesService', () => {
   }
 
   describe('getDownloadInfoForAsset()', () => {
-    let service: DownloadService
+    let service: GitHubReleasesService
     let octokit: TestOctokit
 
     function stubListReleasesResponse(releases: Array<ReposListReleasesItem>) {
@@ -60,7 +59,9 @@ describe('GitHubReleasesService', () => {
         version: '0.27.0',
         url:
           'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64',
-        release: releaseJsonFor('ytt', '0.27.0')
+        meta: {
+          release: releaseJsonFor('ytt', '0.27.0')
+        }
       })
     })
 
@@ -77,7 +78,9 @@ describe('GitHubReleasesService', () => {
         version: '0.27.0',
         url:
           'https://example.com/k14s/ytt/releases/download/0.27.0/ytt-linux-amd64',
-        release: releaseJsonFor('ytt', '0.27.0')
+        meta: {
+          release: releaseJsonFor('ytt', '0.27.0')
+        }
       })
     })
 
@@ -95,7 +98,9 @@ describe('GitHubReleasesService', () => {
         version: '0.28.0',
         url:
           'https://example.com/k14s/ytt/releases/download/0.28.0/ytt-linux-amd64',
-        release: releaseJsonFor('ytt', '0.28.0')
+        meta: {
+          release: releaseJsonFor('ytt', '0.28.0')
+        }
       })
     })
 

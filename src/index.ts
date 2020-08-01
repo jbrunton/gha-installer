@@ -3,6 +3,6 @@ export {DownloadInfo, DownloadService} from './download_service'
 export {Installer} from './installer'
 export {
   GitHubReleasesService,
-  GitHubDownloadInfo
+  GitHubDownloadMeta
 } from './github_releases_service'
 export {Octokit, ReposListReleasesParameters} from './octokit'
