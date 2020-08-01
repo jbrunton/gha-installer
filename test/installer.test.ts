@@ -7,6 +7,8 @@ import {
   OnFileDownloaded
 } from '../src/download_service'
 import * as path from 'path'
+import {GitHubDownloadMeta} from '../src/github_releases_service'
+import {ReposListReleasesItem} from '../src/octokit'
 
 describe('Installer', () => {
   const app = {name: 'ytt', version: '0.28.0'}
@@ -22,8 +24,9 @@ describe('Installer', () => {
     linux: '/bin/ytt',
     win32: '/bin/ytt.exe'
   }
+  const releaseNotes = '* some cool new features'
 
-  let installer: Installer
+  let installer: Installer<GitHubDownloadMeta>
   let core: MockProxy<ActionsCore>
   let cache: MockProxy<ActionsToolCache>
   let fs: MockProxy<FileSystem>
@@ -36,17 +39,28 @@ describe('Installer', () => {
 
   function createInstaller(
     platform: 'win32' | 'linux',
-    onFileDownloaded?: OnFileDownloaded
-  ): Installer {
+    onFileDownloaded?: OnFileDownloaded<GitHubDownloadMeta>
+  ): Installer<GitHubDownloadMeta> {
     const env = {platform: platform}
-    const downloadService = mock<DownloadService>({
+    const downloadService = mock<DownloadService<GitHubDownloadMeta>>({
       onFileDownloaded: onFileDownloaded
     })
-    installer = new Installer(core, cache, fs, env, downloadService)
+    installer = new Installer<GitHubDownloadMeta>(
+      core,
+      cache,
+      fs,
+      env,
+      downloadService
+    )
 
-    const downloadInfo: DownloadInfo = {
+    const downloadInfo: DownloadInfo<GitHubDownloadMeta> = {
       version: '0.28.0',
-      url: downloadUrls[platform]
+      url: downloadUrls[platform],
+      meta: {
+        release: {
+          body: releaseNotes
+        } as ReposListReleasesItem
+      }
     }
     downloadService.getDownloadInfo
       .calledWith(app)
@@ -116,9 +130,10 @@ describe('Installer', () => {
   test('it calls onFileDownloaded, if given', async () => {
     const onFileDownloaded = (
       file: string,
-      info: DownloadInfo,
+      info: DownloadInfo<GitHubDownloadMeta>,
       core: ActionsCore
     ) => {
+      expect(info.meta.release.body).toEqual(releaseNotes)
       throw new Error(`Invalid checksum for ${path.basename(file)}`)
     }
     const installer = createInstaller('linux', onFileDownloaded)

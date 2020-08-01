@@ -10,11 +10,11 @@ import {DownloadInfo, DownloadService} from './download_service'
 import * as semver from 'semver'
 import * as core from '@actions/core'
 
-interface GitHubReleaseInfo {
+export interface GitHubDownloadMeta {
   release: ReposListReleasesItem
 }
 
-export type GitHubDownloadInfo = DownloadInfo & GitHubReleaseInfo
+export type GitHubDownloadInfo = DownloadInfo<GitHubDownloadMeta>
 
 export type RepoFunction = (app: AppInfo) => ReposListReleasesParameters
 export type AssetNameFunction = (platform: string, app: AppInfo) => string
@@ -90,7 +90,7 @@ export class GitHubReleasesService {
         return {
           version: release.tag_name,
           url: candidate.browser_download_url,
-          release: release
+          meta: {release: release}
         }
       }
     }
@@ -114,7 +114,7 @@ export class GitHubReleasesService {
     octokit: Octokit,
     repo: RepoDefinition,
     assetName: AssetNameDefinition
-  ): DownloadService {
+  ): DownloadService<GitHubDownloadMeta> {
     return new GitHubReleasesService(core, process, octokit, repo, assetName)
   }
 }

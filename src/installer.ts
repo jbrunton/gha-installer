@@ -5,31 +5,24 @@ import {
   FileSystem,
   Environment
 } from './interfaces'
-import {DownloadInfo, DownloadService} from './download_service'
+import {DownloadService} from './download_service'
 import * as core from '@actions/core'
 import * as cache from '@actions/tool-cache'
 import * as fs from 'fs'
-import {ReposListReleasesParameters} from './octokit'
 
-type OnFileDownloaded = (
-  path: string,
-  info: DownloadInfo,
-  core: ActionsCore
-) => void
-
-export class Installer {
+export class Installer<T> {
   private _core: ActionsCore
   private _cache: ActionsToolCache
   private _fs: FileSystem
   private _env: Environment
-  private _downloadService: DownloadService
+  private _downloadService: DownloadService<T>
 
   constructor(
     core: ActionsCore,
     cache: ActionsToolCache,
     fs: FileSystem,
     env: Environment,
-    downloadService: DownloadService
+    downloadService: DownloadService<T>
   ) {
     this._core = core
     this._cache = cache
@@ -83,7 +76,7 @@ export class Installer {
     await Promise.all(apps.map((app: AppInfo) => this.installApp(app)))
   }
 
-  static create(downloadService: DownloadService): Installer {
+  static create<T>(downloadService: DownloadService<T>): Installer<T> {
     return new Installer(core, cache, fs, process, downloadService)
   }
 }
