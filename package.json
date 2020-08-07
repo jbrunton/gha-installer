@@ -17,7 +17,10 @@
     "prepublishOnly": "npm run format && node ./scripts/check_clean_repo && npm run lint && npm test",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm test",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "verify:installed": "node scripts/verify_installed.js",
+    "verify:not:installed": "node scripts/verify_not_installed.js",
+    "verify:output": "node scripts/verify_output.js"
   },
   "repository": {
     "type": "git",

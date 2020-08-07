@@ -18,7 +18,9 @@ jobs:
     - uses: ./examples/single-app
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-    - run: gflows version
+        version: 0.1.5
+    - name: verify installed
+      run: npm run verify:output "gflows version" "gflows version 0.1.5" 
 
   example-multi-app:
     runs-on: ubuntu-latest
@@ -29,4 +31,8 @@ jobs:
     - uses: ./examples/multi-app
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-    - run: ytt version
+        ytt: 0.28.0
+    - name: verify installed
+      run: |
+        npm run verify:installed ytt kbld kapp kwt imgpkg vendir
+        npm run verify:output "ytt version" "ytt version 0.28.0" 
