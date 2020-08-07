@@ -9,7 +9,7 @@ async function run(): Promise<void> {
     const releasesService = GitHubReleasesService.create(octokit, repo, 'gflows-linux-amd64')
     const installer = Installer.create(releasesService)
 
-    return await installer.installApp({ name: 'gflows', version: '0.1.0' })
+    return await installer.installApp({ name: 'gflows', version: core.getInput('version') })
   } catch (error) {
     core.setFailed(error.message)
   }
