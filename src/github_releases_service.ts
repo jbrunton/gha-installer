@@ -116,7 +116,6 @@ export class GitHubReleasesService {
 
   static create(
     octokit: Octokit,
-    repo: RepoDefinition,
     opts: GitHubReleasesServiceOpts
   ): DownloadService<GitHubDownloadMeta> {
     return new GitHubReleasesService(core, process, octokit, opts)

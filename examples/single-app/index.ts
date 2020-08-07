@@ -6,7 +6,10 @@ async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
     const repo = { owner: 'jbrunton', repo: 'gflows' }
-    const releasesService = GitHubReleasesService.create(octokit, repo, 'gflows-linux-amd64')
+    const releasesService = GitHubReleasesService.create(octokit, {
+      repo: repo,
+      assetName: 'gflows-linux-amd64'
+    })
     const installer = Installer.create(releasesService)
 
     return await installer.installApp({ name: 'gflows', version: core.getInput('version') })

@@ -11,7 +11,10 @@ import * as github from '@actions/github'
 async function run() {
   try {
     const octokit = createOctokit()
-    const releasesService = GitHubReleasesService.create(octokit, getRepo, getAssetName)
+    const releasesService = GitHubReleasesService.create(octokit, {
+      repo: getRepo,
+      assetName: getAssetName
+    })
     const installer = Installer.create(releasesService)
 
     return await installer.installAll(getAppsToDownload())
