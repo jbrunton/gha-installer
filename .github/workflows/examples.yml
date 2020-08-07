@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  single-app-gflows:
+  single-app:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,3 +19,14 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - run: gflows version
+
+  multi-app-multi-platform:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: npm install && npm run build
+    - run: cd ./examples/multi-app-multi-platform && npm install
+    - uses: ./examples/multi-app-multi-platform
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - run: ytt version
