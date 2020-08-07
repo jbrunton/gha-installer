@@ -34,7 +34,7 @@ function getAssetName(app) {
 function getAppsToDownload() {
   const k14sApps = ['ytt', 'kbld', 'kapp', 'kwt', 'imgpkg', 'vendir']
   return k14sApps.map(app => {
-    return { app: app, version: core.getInput(app) }
+    return { name: app, version: core.getInput(app) }
   })
 }
 
