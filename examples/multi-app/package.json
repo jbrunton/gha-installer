@@ -1,6 +1,12 @@
 {
-  "main": "index.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@jbrunton/gha-installer": "../../"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.5"
   }
 }

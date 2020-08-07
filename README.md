@@ -7,34 +7,7 @@ Utility classes for creating GitHub actions for downloading and caching binary f
 
 ## Usage
 
-### Single app, single platform
+See the example actions:
 
-```typescript
-import {Installer, GitHubReleasesService, Octokit} from '@jbrunton/gha-installer'
-import * as core from '@actions/core'
-import * as github from '@actions/github'
-
-async function run(): Promise<void> {
-  try {
-    const octokit = createOctokit()
-    const repo = { owner: 'jbrunton', repo: 'gflows' }
-    const releasesService = GitHubReleasesService.create(octokit, repo, 'gflows-linux-amd64')
-    const installer = Installer.create(releasesService)
-
-    return await installer.installApp({ name: 'gflows', version: '0.1.0' })
-  } catch (error) {
-    core.setFailed(error.message)
-  }
-}
-
-function createOctokit(): Octokit {
-  const token = core.getInput('token');
-  return github.getOctokit(token);
-}
-
-run()
-```
-
-### Multi-app, multiplatform
-
-You can configure the installer for multiple apps, or to install different binaries on different platforms. See the [multi-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/multi-app) example.
+* [single-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/single-app) - shows how to install a single app on linux.
+* [multi-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/multi-app) - a more complex example that shows how to install multiple apps with different binaries on different platforms.

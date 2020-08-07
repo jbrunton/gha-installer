@@ -1,6 +1,12 @@
-const {Installer, GitHubReleasesService} = require('@jbrunton/gha-installer')
-const core = require('@actions/core')
-const github = require('@actions/github')
+import {
+  Installer,
+  GitHubReleasesService,
+  Octokit,
+  AppInfo,
+  ReposListReleasesParameters
+} from '@jbrunton/gha-installer'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 
 async function run() {
   try {
@@ -14,16 +20,16 @@ async function run() {
   }
 }
 
-function createOctokit() {
+function createOctokit(): Octokit {
   const token = core.getInput('token');
   return github.getOctokit(token);
 }
 
-function getRepo(app) {
+function getRepo(app): ReposListReleasesParameters {
   return { owner: 'k14s', repo: app.name }
 }
 
-function getAssetName(platform, app) {
+function getAssetName(platform, app): string {
   switch (platform) {
     case 'win32': return `${app.name}-windows-amd64.exe`
     case 'darwin': return `${app.name}-darwin-amd64`
@@ -31,7 +37,7 @@ function getAssetName(platform, app) {
   }
 }
 
-function getAppsToDownload() {
+function getAppsToDownload(): Array<AppInfo> {
   const k14sApps = ['ytt', 'kbld', 'kapp', 'kwt', 'imgpkg', 'vendir']
   return k14sApps.map(app => {
     return { name: app, version: core.getInput(app) }

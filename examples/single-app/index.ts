@@ -1,8 +1,8 @@
-const {Installer, GitHubReleasesService} = require('@jbrunton/gha-installer')
-const core = require('@actions/core')
-const github = require('@actions/github')
+import {Installer, GitHubReleasesService, Octokit} from '@jbrunton/gha-installer'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 
-async function run() {
+async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
     const repo = { owner: 'jbrunton', repo: 'gflows' }
@@ -15,7 +15,7 @@ async function run() {
   }
 }
 
-function createOctokit() {
+function createOctokit(): Octokit {
   const token = core.getInput('token');
   return github.getOctokit(token);
 }
