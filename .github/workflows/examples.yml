@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: npm install && npm run build
-    - run: cd ./examples/single-app-gflows && npm install
-    - uses: ./examples/single-app-gflows
+    - run: cd ./examples/single-app && npm install
+    - uses: ./examples/single-app
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - run: gflows version

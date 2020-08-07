@@ -1,4 +1,4 @@
-name: 'single-app-gflows'
+name: 'single-app'
 description: Example action using gha-installer, installs gflows on linux
 inputs:
   token:
