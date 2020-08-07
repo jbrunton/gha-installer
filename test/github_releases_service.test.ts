@@ -16,8 +16,7 @@ describe('GitHubReleasesService', () => {
       core,
       {platform: platform},
       octokit,
-      repo,
-      'ytt-linux-amd64'
+      { repo: repo, assetName: 'ytt-linux-amd64' }
     )
   }
 

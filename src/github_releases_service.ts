@@ -16,38 +16,39 @@ export interface GitHubDownloadMeta {
 
 export type GitHubDownloadInfo = DownloadInfo<GitHubDownloadMeta>
 
-export type RepoFunction = (app: AppInfo) => ReposListReleasesParameters
-export type AssetNameFunction = (platform: string, app: AppInfo) => string
-export type RepoDefinition = ReposListReleasesParameters | RepoFunction
-export type AssetNameDefinition = string | AssetNameFunction
+type RepoFunction = (app: AppInfo) => ReposListReleasesParameters
+type AssetNameFunction = (platform: string, app: AppInfo) => string
+type RepoDefinition = ReposListReleasesParameters | RepoFunction
+type AssetNameDefinition = string | AssetNameFunction
+export type GitHubReleasesServiceOpts = {
+  repo: RepoDefinition,
+  assetName: AssetNameDefinition
+}
 
 export class GitHubReleasesService {
   private _core: ActionsCore
   private _env: Environment
   private _octokit: Octokit
-  private _repo: RepoDefinition
-  private _assetName: AssetNameDefinition
+  private _opts: GitHubReleasesServiceOpts
 
   constructor(
     core: ActionsCore,
     env: Environment,
     octokit: Octokit,
-    repo: RepoDefinition,
-    assetName: AssetNameDefinition
+    opts: GitHubReleasesServiceOpts
   ) {
     this._core = core
     this._env = env
     this._octokit = octokit
-    this._repo = repo
-    this._assetName = assetName
+    this._opts = opts
   }
 
   async getDownloadInfo(app: AppInfo): Promise<GitHubDownloadInfo> {
-    const repo = typeof this._repo == 'object' ? this._repo : this._repo(app)
+    const repo = typeof this._opts.repo == 'object' ? this._opts.repo : this._opts.repo(app)
     const assetName =
-      typeof this._assetName == 'string'
-        ? this._assetName
-        : this._assetName(this._env.platform, app)
+      typeof this._opts.assetName == 'string'
+        ? this._opts.assetName
+        : this._opts.assetName(this._env.platform, app)
     const response = await this._octokit.repos.listReleases(repo)
     const releases: ReposListReleasesResponseData = response.data
 
@@ -113,8 +114,8 @@ export class GitHubReleasesService {
   static create(
     octokit: Octokit,
     repo: RepoDefinition,
-    assetName: AssetNameDefinition
+    opts: GitHubReleasesServiceOpts
   ): DownloadService<GitHubDownloadMeta> {
-    return new GitHubReleasesService(core, process, octokit, repo, assetName)
+    return new GitHubReleasesService(core, process, octokit, opts)
   }
 }
