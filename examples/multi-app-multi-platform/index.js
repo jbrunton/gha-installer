@@ -23,8 +23,8 @@ function getRepo(app) {
   return { owner: 'k14s', repo: app.name }
 }
 
-function getAssetName(app) {
-  switch (process.platform) {
+function getAssetName(platform, app) {
+  switch (platform) {
     case 'win32': return `${app.name}-windows-amd64.exe`
     case 'darwin': return `${app.name}-darwin-amd64`
     default: return `${app.name}-linux-amd64`
