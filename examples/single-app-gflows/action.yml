@@ -1,0 +1,14 @@
+name: 'single-app-gflows'
+description: Example action using gha-installer, installs gflows on linux
+inputs:
+  token:
+    description: "Github token to use to avoid rate limits"
+    required: false
+    default: ""
+  vendir:
+    description: "Version to install"
+    required: false
+    default: latest
+runs:
+  using: 'node12'
+  main: 'index.js'
