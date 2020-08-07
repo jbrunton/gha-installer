@@ -11,4 +11,4 @@ inputs:
     default: latest
 runs:
   using: 'node12'
-  main: './examples/single-app-gflows/index.js'
+  main: 'index.js'
