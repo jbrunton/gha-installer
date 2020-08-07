@@ -5,10 +5,10 @@ inputs:
     description: "Github token to use to avoid rate limits"
     required: false
     default: ""
-  vendir:
+  version:
     description: "Version to install"
     required: false
     default: latest
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: './examples/single-app-gflows/index.js'

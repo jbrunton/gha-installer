@@ -12,7 +12,10 @@ jobs:
   single-app-gflows:
     runs-on: ubuntu-latest
     steps:
-    - uses: .examples/single-app-gflows
+    - uses: actions/checkout@v2
+    - run: npm install && npm run build
+    - run: cd ./examples/single-app-gflows && npm install
+    - uses: ./examples/single-app-gflows
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - run: gflows version

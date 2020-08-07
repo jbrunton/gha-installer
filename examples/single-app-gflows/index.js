@@ -1,6 +1,6 @@
-import {Installer, GitHubReleasesService} from '@jbrunton/gha-installer'
-import * as core from '@actions/core'
-import * as github from '@actions/github'
+const {Installer, GitHubReleasesService} = require('@jbrunton/gha-installer')
+const core = require('@actions/core')
+const github = require('@actions/github')
 
 async function run() {
   try {
@@ -9,7 +9,7 @@ async function run() {
     const releasesService = GitHubReleasesService.create(octokit, repo, 'gflows-linux-amd64')
     const installer = Installer.create(releasesService)
 
-    return await installer.installApp({ name: 'gflows', version: '0.1.0' })
+    return await installer.installApp({ name: 'gflows', version: core.getInput('version') })
   } catch (error) {
     core.setFailed(error.message)
   }
