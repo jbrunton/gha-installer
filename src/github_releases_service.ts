@@ -21,7 +21,7 @@ type AssetNameFunction = (platform: string, app: AppInfo) => string
 type RepoDefinition = ReposListReleasesParameters | RepoFunction
 type AssetNameDefinition = string | AssetNameFunction
 export type GitHubReleasesServiceOpts = {
-  repo: RepoDefinition,
+  repo: RepoDefinition
   assetName: AssetNameDefinition
 }
 
@@ -44,7 +44,10 @@ export class GitHubReleasesService {
   }
 
   async getDownloadInfo(app: AppInfo): Promise<GitHubDownloadInfo> {
-    const repo = typeof this._opts.repo == 'object' ? this._opts.repo : this._opts.repo(app)
+    const repo =
+      typeof this._opts.repo == 'object'
+        ? this._opts.repo
+        : this._opts.repo(app)
     const assetName =
       typeof this._opts.assetName == 'string'
         ? this._opts.assetName

@@ -12,12 +12,10 @@ describe('GitHubReleasesService', () => {
     octokit: TestOctokit = createTestOctokit()
   ): GitHubReleasesService {
     const core = mock<ActionsCore>()
-    return new GitHubReleasesService(
-      core,
-      {platform: platform},
-      octokit,
-      { repo: repo, assetName: 'ytt-linux-amd64' }
-    )
+    return new GitHubReleasesService(core, {platform: platform}, octokit, {
+      repo: repo,
+      assetName: 'ytt-linux-amd64'
+    })
   }
 
   function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
