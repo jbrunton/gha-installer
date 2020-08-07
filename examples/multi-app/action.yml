@@ -1,4 +1,4 @@
-name: 'multi-app-multi-platform'
+name: 'multi-app'
 description: Example action using gha-installer, can install multiple apps on various platforms
 inputs:
   token:
