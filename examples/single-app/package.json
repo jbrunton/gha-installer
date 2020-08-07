@@ -1,6 +1,13 @@
 {
-  "main": "index.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc && ncc build"
+  },
   "dependencies": {
     "@jbrunton/gha-installer": "../../"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.5",
+    "@zeit/ncc": "^0.22.3"
   }
 }
