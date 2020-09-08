@@ -5,7 +5,7 @@
 
 Utility classes for creating GitHub actions for downloading and caching binary files. It provides a couple of specific conveniences:
 
-1. An `Installer` class which, on given an app description (i.e. name + version), will check the GitHub tools cache and if necessary download the binary.
+1. An `Installer` class which, when given an app description (i.e. name + version), will check the GitHub tools cache and if necessary download the binary.
 2. A `GitHubReleasesService` class which knows how to query the GitHub API for latest versions ordered by semantic version number. This is important, because if you simply check the `latest` release (according to the GitHub API) in your actions and then patch an older version, users will be given the patch for your older version.
 
 ## Usage
