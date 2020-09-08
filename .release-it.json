@@ -1,9 +1,9 @@
 {
   "git": {
-    "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
+    "changelog": "npx auto-changelog --stdout --commit-limit 0 -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
   },
   "hooks": {
     "before:init": ["npm run format", "npm run lint", "npm run test"],
-    "after:bump": "npx auto-changelog -p"
+    "after:bump": "npx auto-changelog -p --commit-limit 0"
   }
 }
