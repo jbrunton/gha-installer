@@ -7,5 +7,8 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },
-  verbose: true
+  verbose: true,
+  collectCoverage: true,
+  coverageReporters: ["lcov", "text"],
+  coverageDirectory: 'coverage'
 }
