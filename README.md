@@ -1,7 +1,9 @@
 # GitHub Actions Installer
 
-[![Build Status](https://github.com/jbrunton/gha-installer/workflows/build/badge.svg?branch=develop)](https://github.com/jbrunton/gha-installer/actions?query=branch%3Adevelop+workflow%3Abuild)
+[![Build](https://github.com/jbrunton/gha-installer/workflows/build/badge.svg?branch=develop)](https://github.com/jbrunton/gha-installer/actions?query=branch%3Adevelop+workflow%3Abuild)
+[![Examples](https://github.com/jbrunton/gha-installer/workflows/examples/badge.svg?branch=develop)](https://github.com/jbrunton/gha-installer/actions?query=workflow%3Aexamples)
 [![Maintainability](https://api.codeclimate.com/v1/badges/3d363eb022777f5a6a1e/maintainability)](https://codeclimate.com/github/jbrunton/gha-installer/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/3d363eb022777f5a6a1e/test_coverage)](https://codeclimate.com/github/jbrunton/gha-installer/test_coverage)
 
 Utility classes for creating GitHub actions for downloading and caching binary files. It provides a couple of specific conveniences:
 
