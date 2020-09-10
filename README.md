@@ -14,5 +14,10 @@ Utility classes for creating GitHub actions for downloading and caching binary f
 
 See the example actions:
 
-* [single-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/single-app) - shows how to install a single app on linux.
+* [single-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/single-app) - shows how to install a single app on Linux.
 * [multi-app](https://github.com/jbrunton/gha-installer/tree/develop/examples/multi-app) - a more complex example that shows how to install multiple apps with different binaries on different platforms.
+
+Also see production use cases:
+
+* [jbrunton/setup-gflows](https://github.com/jbrunton/setup-gflows) - installs a single app on Linux or Mac.
+* [k14s/setup-k14s-action](https://github.com/k14s/setup-k14s-action) - installs multiple apps on different platforms.
