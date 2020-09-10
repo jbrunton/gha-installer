@@ -18,7 +18,11 @@ describe('GitHubReleasesService', () => {
     })
   }
 
-  function releaseJsonFor(app: string, version: string, draft: boolean = false): ReposListReleasesItem {
+  function releaseJsonFor(
+    app: string,
+    version: string,
+    draft: boolean = false
+  ): ReposListReleasesItem {
     return {
       tag_name: version,
       draft: draft,
@@ -151,10 +155,7 @@ describe('GitHubReleasesService', () => {
         result => result.tag_name
       )
 
-      expect(orderedResults).toEqual([
-        '0.2.0',
-        '0.1.9'
-      ])
+      expect(orderedResults).toEqual(['0.2.0', '0.1.9'])
     })
   })
 })
