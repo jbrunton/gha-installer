@@ -106,12 +106,14 @@ export class GitHubReleasesService {
   private sortReleases(
     releases: Array<ReposListReleasesItem>
   ): Array<ReposListReleasesItem> {
-    return releases.sort((release1, release2) => {
-      // note: if a tag isn't in semver format, we put it last
-      const version1 = semver.clean(release1.tag_name) || '0.0.0'
-      const version2 = semver.clean(release2.tag_name) || '0.0.0'
-      return semver.rcompare(version1, version2)
-    })
+    return releases
+      .filter(release => !release.draft)
+      .sort((release1, release2) => {
+        // note: if a tag isn't in semver format, we put it last
+        const version1 = semver.clean(release1.tag_name) || '0.0.0'
+        const version2 = semver.clean(release2.tag_name) || '0.0.0'
+        return semver.rcompare(version1, version2)
+      })
   }
 
   static create(

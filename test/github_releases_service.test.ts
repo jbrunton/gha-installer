@@ -18,9 +18,14 @@ describe('GitHubReleasesService', () => {
     })
   }
 
-  function releaseJsonFor(app: string, version: string): ReposListReleasesItem {
+  function releaseJsonFor(
+    app: string,
+    version: string,
+    draft: boolean = false
+  ): ReposListReleasesItem {
     return {
       tag_name: version,
+      draft: draft,
       assets: [
         {
           browser_download_url: `https://example.com/k14s/ytt/releases/download/${version}/${app}-linux-amd64`,
@@ -136,6 +141,21 @@ describe('GitHubReleasesService', () => {
         '0.1.2',
         'not-semver-tag'
       ])
+    })
+
+    test('it filters out draft releases', () => {
+      const service = createService('linux', createTestOctokit())
+      const releases = [
+        releaseJsonFor('ytt', '0.2.1', true),
+        releaseJsonFor('ytt', '0.2.0'),
+        releaseJsonFor('ytt', '0.1.9')
+      ]
+
+      const orderedResults = service['sortReleases'](releases).map(
+        result => result.tag_name
+      )
+
+      expect(orderedResults).toEqual(['0.2.0', '0.1.9'])
     })
   })
 })
