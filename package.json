@@ -1,6 +1,6 @@
 {
   "name": "@jbrunton/gha-installer",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "private": false,
   "description": "GitHub Actions Installer",
   "main": "lib/index.js",
