@@ -4,6 +4,7 @@ import {
   
   ReposListReleasesItem,
   ReposListReleasesParameters,
+  ReposListReleasesResponse,
   ReposListReleasesResponseData
 } from '../../src/octokit';
 import { MockProxy, mockDeep } from 'jest-mock-extended';
@@ -22,8 +23,8 @@ export function createTestOctokit(): TestOctokit {
 }
 
 function stubListReleasesResponse(this: TestOctokit, params: ReposListReleasesParameters, releases: Array<ReposListReleasesItem>) {
-  const response = { data: releases } as OctokitResponse<ReposListReleasesResponseData>
+  const response = { data: releases } as ReposListReleasesResponse
   this.repos.listReleases
     .calledWith(isEqual(params))
-    .mockReturnValue(Promise.resolve(response))
+    .mockReturnValue(Promise.resolve(response as any))
 }

@@ -3,12 +3,14 @@ import {
   Octokit,
   ReposListReleasesItem,
   ReposListReleasesResponseData,
-  ReposListReleasesParameters
+  ReposListReleasesParameters,
+  ReposListReleasesResponse
 } from './octokit'
 import {AppInfo, describeApp} from './app_info'
 import {DownloadInfo, DownloadService} from './download_service'
 import * as semver from 'semver'
 import * as core from '@actions/core'
+import {Endpoints} from '@octokit/types'
 
 export interface GitHubDownloadMeta {
   release: ReposListReleasesItem
@@ -52,8 +54,10 @@ export class GitHubReleasesService {
       typeof this._opts.assetName == 'string'
         ? this._opts.assetName
         : this._opts.assetName(this._env.platform, app)
-    const response = await this._octokit.repos.listReleases(repo)
-    const releases: ReposListReleasesResponseData = response.data
+    const response = (await this._octokit.repos.listReleases(
+      repo
+    )) as ReposListReleasesResponse
+    const releases = response.data
 
     if (app.version == 'latest') {
       const release = this.sortReleases(releases)[0]
