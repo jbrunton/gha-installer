@@ -2,7 +2,6 @@ import {ActionsCore, Environment} from './interfaces'
 import {
   Octokit,
   ReposListReleasesItem,
-  ReposListReleasesResponseData,
   ReposListReleasesParameters,
   ReposListReleasesResponse
 } from './octokit'
@@ -10,7 +9,6 @@ import {AppInfo, describeApp} from './app_info'
 import {DownloadInfo, DownloadService} from './download_service'
 import * as semver from 'semver'
 import * as core from '@actions/core'
-import {Endpoints} from '@octokit/types'
 
 export interface GitHubDownloadMeta {
   release: ReposListReleasesItem
