@@ -26,4 +26,4 @@ For how to use the library, see the example actions:
 And in actions available on the GitHub Marketplace:
 
 * [jbrunton/setup-gflows](https://github.com/jbrunton/setup-gflows) - installs a single app on Linux or Mac.
-* [k14s/setup-k14s-action](https://github.com/k14s/setup-k14s-action) - installs multiple apps on different platforms.
+* [vmware-tanzu/carvel-setup-action](https://github.com/vmware-tanzu/carvel-setup-action) - installs multiple apps on different platforms.
