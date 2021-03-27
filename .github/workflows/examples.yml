@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: npm install && npm run build
-    - run: cd ./examples/single-app && npm install && npm run build
+    - run: npm ci && npm run build
+    - run: cd ./examples/single-app && npm ci && npm run build
     - uses: ./examples/single-app
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: npm install && npm run build
-    - run: cd ./examples/multi-app && npm install && npm run build
+    - run: npm ci && npm run build
+    - run: cd ./examples/multi-app && npm ci && npm run build
     - uses: ./examples/multi-app
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
