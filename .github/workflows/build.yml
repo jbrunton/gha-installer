@@ -33,9 +33,11 @@ jobs:
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
     - run: npm run all
-    - env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      name: upload coverage
+    - name: set CC_TEST_REPORTER_ID
+      run: |
+        echo "CC_TEST_REPORTER_ID=${{ secrets.CC_TEST_REPORTER_ID }}" >> $GITHUB_ENV
+        echo "CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}"
+    - name: upload coverage
       run: ./cc-test-reporter after-build --prefix github.com/jbrunton/gha-installer
     - name: check build up to date
       run: git diff --exit-code --stat HEAD
