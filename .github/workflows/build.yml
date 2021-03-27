@@ -2,6 +2,8 @@ name: build
 
 on:
   pull_request:
+  pull_request_target:
+
   push:
     branches:
       - develop
@@ -36,6 +38,7 @@ jobs:
     - env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       name: upload coverage
+      if: github.actor != 'dependabot[bot]'
       run: ./cc-test-reporter after-build --prefix github.com/jbrunton/gha-installer
     - name: check build up to date
       run: git diff --exit-code --stat HEAD
