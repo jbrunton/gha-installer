@@ -52,7 +52,7 @@ export class GitHubReleasesService {
       typeof this._opts.assetName == 'string'
         ? this._opts.assetName
         : this._opts.assetName(this._env.platform, app)
-    const response = (await this._octokit.repos.listReleases(
+    const response = (await this._octokit.rest.repos.listReleases(
       repo
     )) as ReposListReleasesResponse
     const releases = response.data
