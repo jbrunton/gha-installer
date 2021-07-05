@@ -40,7 +40,7 @@
   "homepage": "https://github.com/jbrunton/gha-installer#readme",
   "devDependencies": {
     "@types/jest": "^26.0.3",
-    "@types/node": "^14.0.14",
+    "@types/node": "^16.0.0",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
     "@typescript-eslint/parser": "^4.27.0",
     "auto-changelog": "^2.2.0",
