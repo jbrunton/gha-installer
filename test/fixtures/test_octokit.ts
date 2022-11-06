@@ -7,14 +7,14 @@ import {
   ReposListReleasesResponse,
   ReposListReleasesResponseData
 } from '../../src/octokit';
-import { MockProxy, mockDeep } from 'jest-mock-extended';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { isEqual } from './matchers'
 
 interface TestMethods {
   stubListReleasesResponse(params: ReposListReleasesParameters, releases: Array<ReposListReleasesItem>): void
 }
 
-export type TestOctokit = MockProxy<Octokit> & TestMethods
+export type TestOctokit = DeepMockProxy<Octokit> & TestMethods
 
 export function createTestOctokit(): TestOctokit {
   const octokit: any = mockDeep<Octokit>()

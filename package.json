@@ -48,7 +48,7 @@
     "eslint-plugin-jest": "^24.0.0",
     "jest": "^27.4.7",
     "jest-circus": "^27.4.6",
-    "jest-mock-extended": "^1.0.9",
+    "jest-mock-extended": "^3.0.0",
     "prettier": "^2.0.5",
     "release-it": "^15.0.0",
     "shelljs": "^0.8.4",
