@@ -58,7 +58,7 @@
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@actions/github": "^5.0.0",
-    "@actions/tool-cache": "^1.6.1",
+    "@actions/tool-cache": "^2.0.0",
     "@octokit/rest": "^18.5.2",
     "@octokit/types": "^6.13.0",
     "@octokit/webhooks": "^9.8.4",
