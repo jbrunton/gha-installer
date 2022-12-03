@@ -8,7 +8,6 @@ import {
   ReposListReleasesResponseData
 } from '../../src/octokit';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { isEqual } from './matchers'
 
 interface TestMethods {
   stubListReleasesResponse(params: ReposListReleasesParameters, releases: Array<ReposListReleasesItem>): void
@@ -25,6 +24,6 @@ export function createTestOctokit(): TestOctokit {
 function stubListReleasesResponse(this: TestOctokit, params: ReposListReleasesParameters, releases: Array<ReposListReleasesItem>) {
   const response = { data: releases } as ReposListReleasesResponse
   this.rest.repos.listReleases
-    .calledWith(isEqual(params))
+    .calledWith(params)
     .mockReturnValue(Promise.resolve(response as any))
 }
